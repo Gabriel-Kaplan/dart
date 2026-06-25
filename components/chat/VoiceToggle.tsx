@@ -11,7 +11,7 @@ let vapiInstance: Vapi | null = null;
 
 function getVapi() {
   if (!vapiInstance) {
-    vapiInstance = new Vapi(process.env.NEXT_PUBLIC_VAPI_PUBLIC_KEY ?? "");
+    vapiInstance = new Vapi(process.env.NEXT_PUBLIC_VAPI_WEB_TOKEN ?? "");
   }
   return vapiInstance;
 }

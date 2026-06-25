@@ -27,7 +27,7 @@ export default function AboutPage() {
             Built for the moment no one is picking up.
           </h1>
           <p className="text-[#6B7280] text-base leading-relaxed max-w-xl">
-            DART started from a simple frustration: being stuck on software you're
+            DART started from a simple frustration: being stuck on software you&apos;re
             paying for, with no one around who actually knows how to fix it.
             Not a chatbot. Not a documentation page. A real expert — available now.
           </p>
@@ -46,9 +46,9 @@ export default function AboutPage() {
             </p>
             <p className="text-sm text-[#6B7280] leading-relaxed">
               Salesforce, SAP, Jira, HubSpot — these tools run entire businesses.
-              But when something breaks, you're on hold, in a ticket queue, or
-              watching a 40-minute tutorial that doesn't cover your exact version.
-              The cost isn't just frustration. It's hours of lost productivity, every week.
+              But when something breaks, you&apos;re on hold, in a ticket queue, or
+              watching a 40-minute tutorial that doesn&apos;t cover your exact version.
+              The cost isn&apos;t just frustration. It&apos;s hours of lost productivity, every week.
             </p>
           </div>
           <div className="bg-[#0D0D0D] p-10">
@@ -63,7 +63,7 @@ export default function AboutPage() {
             <p className="text-sm text-[#6B7280] leading-relaxed">
               DART gives you an AI agent that knows Salesforce the way a
               certified architect does — not a generalist with surface knowledge,
-              but a specialist who's seen every error message, every permission edge case,
+              but a specialist who&apos;s seen every error message, every permission edge case,
               every admin gotcha. For each platform you use.
             </p>
           </div>

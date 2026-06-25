@@ -154,4 +154,3 @@ DART short-circuits all of that. Every agent knows the platform deeply enough to
 
 ---
 
-*Built with the Anthropic API · Powered by Claude*

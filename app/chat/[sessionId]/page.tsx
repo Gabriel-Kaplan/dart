@@ -1,7 +1,7 @@
 import { redirect, notFound } from "next/navigation";
 import { createSupabaseClient } from "@/lib/supabase/server";
 import { getAgent, agentList } from "@/lib/agents";
-import Sidebar from "@/components/layout/Sidebar";
+import AppShell from "@/components/layout/AppShell";
 import ChatWindow from "@/components/chat/ChatWindow";
 
 type Props = {
@@ -46,15 +46,12 @@ export default async function ChatPage({ params, searchParams }: Props) {
   const agent = getAgent(softwareKey);
 
   return (
-    <div className="flex h-screen bg-[#080808] p-3 gap-3">
-      <Sidebar sessions={sessions ?? []} userEmail={user.email} />
-      <main className="flex-1 overflow-hidden">
-        <ChatWindow
-          sessionId={sessionId}
-          agent={agent}
-          initialMessage={msg ? decodeURIComponent(msg) : undefined}
-        />
-      </main>
-    </div>
+    <AppShell sessions={sessions ?? []} userEmail={user.email}>
+      <ChatWindow
+        sessionId={sessionId}
+        agent={agent}
+        initialMessage={msg ? decodeURIComponent(msg) : undefined}
+      />
+    </AppShell>
   );
 }

@@ -2,10 +2,49 @@
 
 import { useState, useEffect, useRef, useCallback } from "react";
 import Link from "next/link";
+import ReactMarkdown from "react-markdown";
+import remarkGfm from "remark-gfm";
 import { createSupabaseClient } from "@/lib/supabase/client";
 import { Agent } from "@/lib/agents";
 import { ArrowLeft, ArrowUp, Square, RotateCcw } from "lucide-react";
 import VoiceToggle from "./VoiceToggle";
+
+const mdComponents: React.ComponentProps<typeof ReactMarkdown>["components"] = {
+  p: ({ children }) => <p className="mb-2 last:mb-0">{children}</p>,
+  strong: ({ children }) => <strong className="font-semibold text-[#F8F9FA]">{children}</strong>,
+  em: ({ children }) => <em className="italic opacity-80">{children}</em>,
+  ul: ({ children }) => <ul className="list-disc pl-4 mb-2 space-y-0.5">{children}</ul>,
+  ol: ({ children }) => <ol className="list-decimal pl-4 mb-2 space-y-0.5">{children}</ol>,
+  li: ({ children }) => <li>{children}</li>,
+  h1: ({ children }) => <h1 className="text-base font-bold mb-1.5 mt-3 first:mt-0 text-[#F8F9FA]">{children}</h1>,
+  h2: ({ children }) => <h2 className="text-sm font-bold mb-1.5 mt-2.5 first:mt-0 text-[#F8F9FA]">{children}</h2>,
+  h3: ({ children }) => <h3 className="text-sm font-semibold mb-1 mt-2 first:mt-0 text-[#F8F9FA]/90">{children}</h3>,
+  blockquote: ({ children }) => (
+    <blockquote className="border-l-2 border-[#0066FF]/60 pl-3 my-2 text-[#6B7280] italic">{children}</blockquote>
+  ),
+  a: ({ href, children }) => (
+    <a href={href} target="_blank" rel="noopener noreferrer" className="text-[#3385FF] underline underline-offset-2 hover:text-[#0066FF]">
+      {children}
+    </a>
+  ),
+  hr: () => <hr className="my-3 border-white/[0.08]" />,
+  pre: ({ children }) => (
+    <pre className="my-3 p-3 rounded-xl bg-black/40 overflow-x-auto border border-white/[0.08]">
+      {children}
+    </pre>
+  ),
+  code: ({ className, children }) => {
+    const isBlock = String(children).endsWith("\n");
+    if (isBlock) {
+      return <code className="text-xs font-mono text-[#93C5FD]">{String(children).replace(/\n$/, "")}</code>;
+    }
+    return (
+      <code className="px-1.5 py-0.5 rounded text-[11px] bg-white/[0.08] font-mono text-[#93C5FD]">
+        {children}
+      </code>
+    );
+  },
+};
 
 function buildDM(dark: boolean) {
   return {
@@ -297,7 +336,7 @@ export default function ChatWindow({ sessionId, agent, initialMessage }: Props) 
       </div>
 
       {/* Messages feed */}
-      <div className="flex-1 overflow-y-auto px-8 py-8">
+      <div className="flex-1 overflow-y-auto px-3 py-4 md:px-8 md:py-8">
         <div className="max-w-3xl mx-auto">
           {/* Empty state */}
           {initialized && messages.length === 0 && !streaming && (
@@ -344,7 +383,7 @@ export default function ChatWindow({ sessionId, agent, initialMessage }: Props) 
                   </div>
                 )}
                 <div
-                  className="max-w-[78%] px-4 py-3 text-sm leading-relaxed whitespace-pre-wrap"
+                  className="max-w-[88%] md:max-w-[78%] px-4 py-3 text-sm leading-relaxed"
                   style={
                     isUser
                       ? {
@@ -363,7 +402,13 @@ export default function ChatWindow({ sessionId, agent, initialMessage }: Props) 
                         }
                   }
                 >
-                  {msg.content}
+                  {isUser ? (
+                    <span className="whitespace-pre-wrap">{msg.content}</span>
+                  ) : (
+                    <ReactMarkdown remarkPlugins={[remarkGfm]} components={mdComponents}>
+                      {msg.content}
+                    </ReactMarkdown>
+                  )}
                 </div>
               </div>
             );
@@ -380,7 +425,7 @@ export default function ChatWindow({ sessionId, agent, initialMessage }: Props) 
                   <span style={{ color: "#fff", fontSize: 10, fontWeight: 700 }}>D</span>
                 </div>
                 <div
-                  className="max-w-[78%] px-4 py-3 text-sm leading-relaxed whitespace-pre-wrap"
+                  className="max-w-[88%] md:max-w-[78%] px-4 py-3 text-sm leading-relaxed"
                   style={{
                     background: dm.inputBg,
                     border: `1px solid ${dm.divider2}`,
@@ -389,7 +434,9 @@ export default function ChatWindow({ sessionId, agent, initialMessage }: Props) 
                     color: dm.textPrimary,
                   }}
                 >
-                  {streamingContent}
+                  <ReactMarkdown remarkPlugins={[remarkGfm]} components={mdComponents}>
+                    {streamingContent}
+                  </ReactMarkdown>
                 </div>
               </div>
             ) : (

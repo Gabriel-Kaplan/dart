@@ -29,6 +29,7 @@ type Session = {
 type Props = {
   sessions: Session[];
   userEmail?: string;
+  onMobileClose?: () => void;
 };
 
 function relativeTime(iso: string) {
@@ -43,7 +44,7 @@ function relativeTime(iso: string) {
   return new Date(iso).toLocaleDateString("en-US", { month: "short", day: "numeric" });
 }
 
-export default function Sidebar({ sessions: initialSessions, userEmail }: Props) {
+export default function Sidebar({ sessions: initialSessions, userEmail, onMobileClose }: Props) {
   const pathname = usePathname();
   const router = useRouter();
   const supabase = createSupabaseClient();
@@ -60,6 +61,7 @@ export default function Sidebar({ sessions: initialSessions, userEmail }: Props)
   );
 
   async function handleSignOut() {
+    onMobileClose?.();
     await supabase.auth.signOut();
     router.push("/");
   }
@@ -120,6 +122,7 @@ export default function Sidebar({ sessions: initialSessions, userEmail }: Props)
           <div className="px-3 py-3 shrink-0">
             <Link
               href="/dashboard"
+              onClick={onMobileClose}
               className="flex items-center justify-center gap-2 w-full text-white text-xs font-semibold py-2.5 px-3 rounded-full transition-all duration-200 bg-[#0066FF] hover:bg-[#0052CC] shadow-[0_0_16px_rgba(0,102,255,0.2)]"
             >
               <Plus className="w-3.5 h-3.5" />
@@ -175,7 +178,7 @@ export default function Sidebar({ sessions: initialSessions, userEmail }: Props)
                       : "1px solid transparent",
                   }}
                 >
-                  <Link href={`/chat/${session.id}`} className="flex-1 min-w-0">
+                  <Link href={`/chat/${session.id}`} onClick={onMobileClose} className="flex-1 min-w-0">
                     <p
                       className="text-xs font-medium truncate"
                       style={{ color: isActive ? dm.textPrimary : "rgba(248,249,250,0.6)" }}

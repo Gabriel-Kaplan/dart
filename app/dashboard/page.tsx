@@ -1,6 +1,6 @@
 import { redirect } from "next/navigation";
 import { createSupabaseClient } from "@/lib/supabase/server";
-import Sidebar from "@/components/layout/Sidebar";
+import AppShell from "@/components/layout/AppShell";
 import DashboardWelcome from "@/components/dashboard/DashboardWelcome";
 
 export default async function DashboardPage() {
@@ -19,11 +19,8 @@ export default async function DashboardPage() {
     .order("created_at", { ascending: false });
 
   return (
-    <div className="flex h-screen bg-[#080808] p-3 gap-3">
-      <Sidebar sessions={sessions ?? []} userEmail={user.email} />
-      <main className="flex-1">
-        <DashboardWelcome />
-      </main>
-    </div>
+    <AppShell sessions={sessions ?? []} userEmail={user.email}>
+      <DashboardWelcome />
+    </AppShell>
   );
 }

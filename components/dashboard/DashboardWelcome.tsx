@@ -61,13 +61,13 @@ export default function DashboardWelcome() {
       }}
     >
       {/* Scrollable content */}
-      <div className="flex-1 overflow-y-auto px-6 py-12">
+      <div className="flex-1 overflow-y-auto px-4 py-8 md:px-6 md:py-12">
         <div className="max-w-2xl mx-auto">
           {/* Greeting */}
-          <div className="mb-10">
+          <div className="mb-8 md:mb-10">
             <h1
-              className="pt-20 font-display font-extrabold text-[#F8F9FA] leading-[1.08] tracking-[-0.02em] mb-3"
-              style={{ fontSize: "clamp(2rem, 4vw, 3.5rem)" }}
+              className="pt-8 md:pt-20 font-display font-extrabold text-[#F8F9FA] leading-[1.08] tracking-[-0.02em] mb-3"
+              style={{ fontSize: "clamp(1.75rem, 5vw, 3.5rem)" }}
             >
               What do you need solved?
             </h1>

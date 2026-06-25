@@ -1,0 +1,165 @@
+You are building DART — a real-time AI-powered IT support assistant. Think of it as the product that fills the gap between "I'm stuck" and "I can finally talk to a human expert." DART is for individuals and companies who use complex software (Salesforce, SAP, HubSpot, QuickBooks, Jira, etc.) and need instant expert help — no tickets, no waiting for meetings, no reading 40-minute tutorials.
+
+---
+
+## PRODUCT OVERVIEW
+
+**Name:** DART
+**Tagline:** "Stuck? Solved."
+**Core concept:** An AI agent that acts like a senior IT professional who knows your specific software deeply. You can chat with it, talk to it via voice, or let it take over your screen and fix the problem for you.
+
+**Two markets:**
+- B2C: Individuals who download DART themselves when they're stuck
+- B2B: Companies that license DART as a support layer for their customers/employees
+
+---
+
+## PHASE 1 — MVP (What we are building now)
+
+Build a web app. Stack: Next.js 14 (App Router), Supabase (auth + database), Tailwind CSS, TypeScript.
+
+### Core features for MVP:
+
+**1. Agent Chat Interface**
+- Clean LLM-style chat UI
+- User selects their software from a list before starting (Salesforce, HubSpot, QuickBooks, Jira, SAP — plus "Other / General")
+- Based on selection, the correct specialist agent is loaded with a deep system prompt for that software
+- Streaming responses via Anthropic claude-sonnet-4-6
+- Message history persisted to Supabase per session
+
+**2. Agent Architecture — Two Tiers**
+- Tier 1 (Hardcoded Specialists): Salesforce, HubSpot, QuickBooks, Jira, SAP. Each has its own deeply crafted system prompt with real flows, common error patterns, step-by-step walkthroughs, terminology, and edge cases for that specific software.
+- Tier 2 (General Agent): For "Other" software selection. A general senior IT assistant prompt — strong reasoning, good at following user descriptions, asks clarifying questions.
+- System prompts live in /lib/agents/ as individual files, one per software.
+
+**3. Voice Mode**
+- Integrate Vapi for voice conversations with the agent
+- User can toggle between text and voice mid-session
+- Voice uses the same underlying agent/system prompt as chat
+
+**4. Auth**
+- Supabase Auth (email/password + Google OAuth)
+- Free tier: limited sessions per month
+- Pro tier: unlimited (Stripe integration, set up billing but don't wire payments in MVP)
+
+**5. Session History**
+- Users can see past sessions
+- Each session shows: software selected, date, summary (one line, AI-generated at session end)
+
+---
+
+## PHASE 2 — Post MVP (architect for this but don't build yet)
+
+- **Remote desktop takeover** (AnyDesk-style integration or WebRTC-based) — agent can see and control the user's screen with explicit consent
+- **B2B white-label** — companies can embed DART as a widget on their own support pages
+- **Agent knowledge expansion** — RAG pipeline over official software documentation so agents stay current
+- **Mobile app** — React Native
+
+---
+
+## DESIGN DIRECTION
+
+DART is a tool for people who are frustrated and need things fixed fast. The design should feel:
+- **Fast and clinical** — not warm and bubbly. This is a professional tool.
+- **Confident** — the UI should feel like it knows what it's doing
+- **Dark-mode first** — primary dark background, sharp contrast
+- **Accent color:** Electric blue — #0066FF. Sharp. Precise. Like a dart.
+- **Typography:** Sharp sans-serif. Inter or DM Sans for body. Something with weight for headings.
+- **No gradients that look like a SaaS template.** No purple-to-pink. No rounded bubbly cards.
+- The chat interface should feel closer to a terminal / professional tool than a consumer chatbot.
+
+Design language: "Precision tool. Not a toy."
+
+---
+
+## FILE STRUCTURE
+
+/app
+  /dashboard         → session history, software selector
+  /chat/[sessionId]  → main chat interface
+  /auth              → login/signup
+/lib
+  /agents
+    salesforce.ts    → Salesforce specialist system prompt + metadata
+    hubspot.ts
+    quickbooks.ts
+    jira.ts
+    sap.ts
+    general.ts       → Tier 2 general agent
+  /supabase          → client + server clients
+  /vapi              → voice integration helpers
+/components
+  /chat              → ChatWindow, MessageBubble, InputBar, VoiceToggle
+  /layout            → Sidebar, Navbar
+/api
+  /chat/route.ts     → streaming Anthropic API route
+  /session/route.ts  → session CRUD
+
+---
+
+## DATABASE SCHEMA (Supabase)
+
+create table sessions (
+  id uuid primary key default gen_random_uuid(),
+  user_id uuid references auth.users,
+  software text not null,
+  summary text,
+  created_at timestamptz default now(),
+  updated_at timestamptz default now()
+);
+
+create table messages (
+  id uuid primary key default gen_random_uuid(),
+  session_id uuid references sessions(id) on delete cascade,
+  role text not null,
+  content text not null,
+  created_at timestamptz default now()
+);
+
+-- RLS: users can only access their own sessions and messages
+
+---
+
+## AGENT SYSTEM PROMPT STRUCTURE (per specialist)
+
+Each agent file should export:
+- systemPrompt: string — the full deep system prompt for that software
+- softwareName: string
+- softwareDescription: string — one line shown to user on selection screen
+- commonIssues: string[] — quick-start suggestions shown in empty chat state
+
+The system prompt for each specialist should include:
+- Role definition ("You are a senior Salesforce administrator and support specialist...")
+- Deep knowledge of the software's core modules, common workflows, and error patterns
+- How to ask clarifying questions before jumping to solutions
+- Step-by-step instruction style with numbered steps
+- Awareness of different user skill levels (admin vs end user)
+- When to suggest escalation to human support
+
+---
+
+## KEY RULES
+
+- Always use createSupabaseClient() with await on server components
+- Never define sub-components inside parent components
+- Streaming chat via Anthropic SDK, not fetch directly
+- Vapi voice uses same session context as chat
+- Mobile responsive from day one
+- All Anthropic calls go through /api/chat/route.ts — never call from client directly
+- Use claude-sonnet-4-6 model
+- env vars are already set in .env.local — do not create or overwrite that file
+
+---
+
+## START HERE
+
+1. Scaffold the Next.js project with Tailwind + TypeScript + Supabase
+2. Set up Supabase schema (sessions + messages tables with RLS)
+3. Build the software selection screen (landing into a new session)
+4. Build the chat interface with streaming
+5. Wire up the Salesforce specialist agent as the first working Tier 1 agent
+6. Add auth (Supabase email + Google)
+7. Add session history dashboard
+8. Add Vapi voice toggle
+
+Build in this order. Do not skip ahead.

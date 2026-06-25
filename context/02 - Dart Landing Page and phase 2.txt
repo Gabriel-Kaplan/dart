@@ -1,0 +1,110 @@
+DART — Phase 2 Prompt
+
+Before touching any Phase 2 features, build the landing page first.
+
+---
+
+## STEP 1 — LANDING PAGE (build this first)
+
+The landing page is the public-facing gate before auth. It lives at / (root route). The dashboard is behind auth at /dashboard.
+
+Design direction: dark, sharp, fast. "Precision tool. Not a toy."
+- Background: near-black #0A0A0A
+- Accent: electric blue #0066FF
+- Typography: Inter, heavy weights for headlines
+- No gradients. No bubbly cards. No purple-to-pink.
+
+### Structure (top to bottom):
+
+**Navbar**
+- DART logo left
+- "Sign In" and "Get Started" buttons right
+- Sticky, minimal
+
+**Hero Section**
+- Big bold headline: "Stuck? Solved."
+- Subheadline: "Your personal AI IT assistant for any software. Instant help, no tickets, no waiting."
+- Two CTAs: "Get Started Free" → /auth/signup, "See How It Works" → scrolls down
+- Right side or background: a mock chat UI showing a sample conversation (static, not functional) — shows a user asking a Salesforce question and DART answering with steps
+
+**How It Works Section**
+- 3 steps, horizontal layout:
+  1. Pick your software
+  2. Describe your problem
+  3. Get instant expert help
+- Clean icons or numbers, one line per step
+
+**Features Section**
+- 3 feature cards:
+  1. Specialist Agents — "Deep knowledge of Salesforce, HubSpot, Jira, QuickBooks, SAP and more"
+  2. Voice Mode — "Talk to DART like a real IT professional. No typing required."
+  3. Screen Takeover (coming soon badge) — "Let DART see your screen and fix it for you"
+- Dark cards, blue accent borders on hover
+
+**Social Proof / CTA Section**
+- Simple: "Stop waiting for meetings. Start fixing problems."
+- Single CTA: "Get Started Free" → /auth/signup
+
+**Footer**
+- DART logo
+- Links: Privacy, Terms
+- "Built by Dev To Defy"
+
+---
+
+## STEP 2 — PHASE 2 FEATURES (after landing page is done)
+
+### 1. Session Summaries
+- At the end of every session (when user closes chat or starts new one), fire a background API call to claude-sonnet-4-6
+- Prompt: "Summarize this support session in one sentence. Focus on what the user was trying to do and whether it was resolved."
+- Save summary to sessions.summary in Supabase
+- Display in session history sidebar and recent sessions on dashboard
+
+### 2. Software Icons
+- Add a recognizable icon or logo mark for each software card on the selection screen
+- Salesforce = cloud icon, HubSpot = sprocket, QuickBooks = QB, Jira = Jira diamond, SAP = SAP letters, General = wrench or terminal icon
+- Use lucide-react icons where possible, fallback to styled text badges
+
+### 3. Suggested Questions in Empty Chat
+- When a new chat session opens, before the user types anything, show 3-4 suggested quick-start questions for that software
+- These come from the commonIssues array already defined in each agent file
+- Clicking a suggestion auto-fills and submits it
+
+### 4. Auth Gate
+- Ensure / (landing page) is fully public
+- /dashboard and /chat/* require auth — redirect to /auth/signin if not logged in
+- After sign in, redirect back to /dashboard
+
+### 5. Mobile Responsiveness Audit
+- Go through every page and fix any mobile breakpoint issues
+- Sidebar on mobile should collapse into a hamburger menu
+- Chat input should stay pinned to bottom on mobile
+- Software selection cards should stack to single column on mobile
+
+### 6. Error States
+- If Anthropic API call fails, show a clean error message in chat: "Something went wrong. Try again."
+- If session fails to load, show empty state with "Start a new session" CTA
+- Never show raw error objects to the user
+
+---
+
+## KEY RULES (carry forward from Phase 1)
+- Always use createSupabaseClient() with await on server components
+- Never define sub-components inside parent components
+- All Anthropic calls go through /api/chat/route.ts
+- Use claude-sonnet-4-6 model
+- env vars are in .env.local — do not overwrite
+- Mobile responsive on everything
+
+---
+
+## ORDER OF EXECUTION
+1. Landing page
+2. Session summaries
+3. Software icons
+4. Suggested questions
+5. Auth gate audit
+6. Mobile audit
+7. Error states
+
+Build in this order. Do not skip ahead.

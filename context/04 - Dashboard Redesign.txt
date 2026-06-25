@@ -1,0 +1,39 @@
+DART Dashboard Redesign — Full Prompt
+We're redesigning the DART dashboard. DART is a dark-themed AI assistant platform (#080808 background, #0066FF accent, #F8F9FA text, #6B7280 muted). The design language is rounded/pill-based (established in the landing nav and hero), premium but minimal — think Linear meets a dark-mode Notion.
+The dashboard is the core product surface — it should feel like you're inside an intelligent platform, not just a chat list. It needs to convey that DART knows your history, is ready to help, and is one click away from solving your next problem.
+Layout:
+
+Sidebar left: logo, nav links, and conversation history list at the bottom. Full height.
+Main area right: either an empty/welcome state or active conversation view.
+
+Sidebar — History Panel:
+
+List of past conversations, each showing title + relative timestamp (e.g. "2 hours ago")
+Search bar at the top of the history list — pill-shaped input, bg-white/5 border border-white/10, placeholder "Search conversations…", with a search icon. Filters the list client-side as the user types.
+Each history item has a delete button (trash icon) that appears on hover — positioned absolutely on the right side of the item. On click, show a subtle inline confirm ("Delete?") before removing. No modal.
+Active conversation item gets a bg-white/10 rounded-xl highlight.
+
+Welcome / Empty State (when no conversation is selected):
+
+Center of the main area
+Large greeting: "What do you need solved?" in font-display, big and confident
+Subtext: "Ask anything about Salesforce, HubSpot, Jira, QuickBooks, SAP, or any platform you're stuck on."
+Below that: a row of quick-start suggestion chips — pill buttons like "Fix my Salesforce workflow", "Debug a HubSpot sequence", "Explain a Jira permission", etc. Clicking one pre-fills the input.
+Input bar fixed to the bottom of the main area — pill-shaped, prominent, bg-white/5 border border-white/10, send button with blue glow on the right.
+
+Active Conversation View:
+
+Messages in a scrollable feed above the fixed input bar
+User messages: right-aligned, bg-[#0066FF]/20 border border-[#0066FF]/30 rounded-2xl
+Assistant messages: left-aligned, bg-white/5 border border-white/10 rounded-2xl, with a small DART logo/avatar on the left
+Typing indicator: three animated dots in a pill bubble
+
+General aesthetic rules:
+
+All cards, inputs, and containers: rounded-2xl or rounded-xl — no sharp corners anywhere
+Subtle borders: border border-white/8 or border-white/10
+No heavy shadows — use very subtle shadow-sm or glow only on the blue CTA elements
+Micro-interactions: hover states on all clickable items, smooth 200ms transitions
+The platform should feel alive and responsive — like it's waiting for you, not just sitting there
+
+Stack: Next.js App Router, Tailwind, Framer Motion for any entrance animations. Supabase for conversation storage (assume conversations table with id, title, created_at, updated_at). Use useOptimistic or standard useState for the delete flow.

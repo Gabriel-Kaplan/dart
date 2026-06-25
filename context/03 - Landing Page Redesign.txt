@@ -1,0 +1,27 @@
+Act as an elite frontend engineer and GSAP interaction designer. We are developing a highly refined, premium landing page mimicking modern Webflow elite templates like Cyrclo, featuring giant display typography, fluid parallax scroll depth, and seamless layout transitions.
+
+Inject these strict UI parameters directly into your construction:
+
+1. TYPOGRAPHY SYSTEM (Oversized Bold Grotesque)
+- Headings: Use a striking display font like 'Syne', 'Plus Jakarta Sans', or 'Clash Display' (fallback: System Sans-Serif, 900 weight).
+- Hero Font Scale: Hero main text must use `font-size: clamp(3.5rem, 8vw, 8rem);` with tight letter-spacing (`letter-spacing: -0.04em;`) and compressed line-height (`line-height: 0.95;`).
+
+2. PARALLAX & DEPTH ARCHITECTURE
+- Avoid scroll-jacking. Build using modern CSS `position: sticky;` or isolated GSAP/native scroll transforms for multi-layered speed layouts.
+- Create three distinct scrolling depths:
+  * Foreground: Large, crisp text containers overlapping graphics with high z-index.
+  * Midground: Asymmetric Bento cards or product frames translating vertically at a speed modifier of 1.2x.
+  * Background: Large abstract geometry or typography elements moving at a speed modifier of 0.7x.
+
+3. REFINED VISUAL STYLING (The Cyrclo Aesthetic)
+- Dark Mode Mastery: Deep background (#0B0B0C or #080808) with high-contrast sharp white elements (#F8F9FA).
+- Borders: Do not use standard thick strokes. Use `1px solid rgba(255, 255, 255, 0.08)` for grid borders and card boundaries.
+- Fluid Interactions: Any interactive block must feature immediate but smooth cursor-reactive shifts or structural expansion.
+
+4. SECTIONS TO BUILD IN ORDER:
+- Parallax Hero Block: A massive display title where background words move slower than the main foreground callouts upon scroll.
+- Stacking Sticky Cards: A section where product benefit cards scroll up and lock on top of one another sequentially using CSS position: sticky.
+- Infinite Text Marquee: A massive, full-viewport width running text loop acting as a divider.
+remember were using nextjs and tailwind if you need to install any packages let me know first
+
+Before coding, inspect our current tech stack, outline the exact CSS primitive setup you plan to use for the parallax layers, and ask for my text/copy guidelines.

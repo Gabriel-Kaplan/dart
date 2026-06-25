@@ -70,6 +70,18 @@ export default function HeroSection() {
         {/* Center — editorial text block */}
         <div className="min-w-0 flex flex-col items-center text-center">
 
+          {/* Acronym label */}
+          <motion.p
+            initial={{ opacity: 0, y: 8 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, delay: 0.1, ease: [0.16, 1, 0.3, 1] }}
+            className="mb-6 text-xs text-[#6B7280] tracking-[0.22em] uppercase font-mono flex items-center gap-3"
+          >
+            <span className="inline-block shrink-0 w-5 h-px bg-[#6B7280]/50" />
+            <span><b className="text-[#F8F9FA]">D</b>irect <b className="text-[#F8F9FA]">A</b>ssistant for <b className="text-[#F8F9FA]">R</b>eal-<b className="text-[#F8F9FA]">T</b>ime help</span>
+            <span className="inline-block shrink-0 w-5 h-px bg-[#6B7280]/50" />
+          </motion.p>
+
           {/* Headline — clamp scale, Syne display font */}
           <div className="mb-10">
             {["Stuck?", "Solved."].map((word, i) => (
@@ -79,7 +91,7 @@ export default function HeroSection() {
                   animate={{ y: "0%" }}
                   transition={{ duration: 0.95, delay: 0.2 + i * 0.16, ease: [0.16, 1, 0.3, 1] }}
                   className="font-display font-extrabold text-[#F8F9FA] leading-[1.08] tracking-[-0.01em] block"
-                  style={{ fontSize: "clamp(3rem, 7.5vw, 7.5rem)" }}
+                  style={{ fontSize: "clamp(3.8rem, 7.5vw, 7.5rem)" }}
                 >
                   {word}
                 </motion.h1>

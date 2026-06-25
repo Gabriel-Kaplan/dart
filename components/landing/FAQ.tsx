@@ -5,6 +5,10 @@ import { Plus, Minus } from "lucide-react";
 
 const faqs = [
   {
+    q: "What does DART stand for? ",
+    a: "Direct Assistant for Real-Time help",
+  },
+  {
     q: "How is DART different from just asking ChatGPT?",
     a: "ChatGPT is a generalist. DART is a specialist. Each agent has deep knowledge of a specific platform — the exact menus, error patterns, admin workflows, permission models, and edge cases that come from years of hands-on experience. When you ask DART a Salesforce question, you get the same answer a certified Salesforce architect would give you.",
   },
@@ -36,6 +40,7 @@ const faqs = [
     q: "Is DART a real person?",
     a: "No — DART is AI. But it behaves like a senior expert, not a customer service bot. It asks smart questions, gives real answers, and walks you through exact steps. It won't tell you to 'check the documentation.'",
   },
+  
 ];
 
 export default function FAQ() {

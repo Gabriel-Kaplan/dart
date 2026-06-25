@@ -33,7 +33,7 @@ const mdComponents: React.ComponentProps<typeof ReactMarkdown>["components"] = {
       {children}
     </pre>
   ),
-  code: ({ className, children }) => {
+  code: ({ children }) => {
     const isBlock = String(children).endsWith("\n");
     if (isBlock) {
       return <code className="text-xs font-mono text-[#93C5FD]">{String(children).replace(/\n$/, "")}</code>;

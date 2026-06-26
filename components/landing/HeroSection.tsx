@@ -2,6 +2,7 @@
 
 import { motion, useScroll, useTransform } from "framer-motion";
 import { useRef } from "react";
+import LiquidEther from "@/components/landing/LiquidEther";
 import Link from "next/link";
 
 export default function HeroSection() {
@@ -11,31 +12,36 @@ export default function HeroSection() {
     offset: ["start start", "end start"],
   });
 
-  // Three scroll depths
-  const bgWordY = useTransform(scrollYProgress, [0, 1], ["0%", "28%"]); // 0.7x — background
-
-  const contentY = useTransform(scrollYProgress, [0, 1], ["0%", "14%"]); // 1x — foreground
+  const bgWordY = useTransform(scrollYProgress, [0, 1], ["0%", "28%"]);
+  const contentY = useTransform(scrollYProgress, [0, 1], ["0%", "14%"]);
   const fadeOut = useTransform(scrollYProgress, [0, 0.55], [1, 0]);
-
-
 
   return (
     <section
       ref={ref}
       className="relative min-h-screen flex items-center overflow-hidden bg-[#080808]"
     >
-      {/* LAYER 0 — Grid (slowest) */}
-      <motion.div
-        className="absolute inset-0 pointer-events-none"
-        style={{
-          y: useTransform(scrollYProgress, [0, 1], ["0%", "10%"]),
-          backgroundImage: `
-            linear-gradient(rgba(255,255,255,0.025) 1px, transparent 1px),
-            linear-gradient(90deg, rgba(255,255,255,0.025) 1px, transparent 1px)
-          `,
-          backgroundSize: "72px 72px",
-        }}
-      />
+
+      {/* LAYER 0 — Liquid fluid background */}
+      <div className="absolute inset-0 pointer-events-none">
+        <LiquidEther
+          colors={["#0066FF", "#0044CC", "#001F66"]}
+          mouseForce={20}
+          cursorSize={100}
+          isViscous
+          viscous={30}
+          iterationsViscous={32}
+          iterationsPoisson={32}
+          resolution={0.5}
+          isBounce={false}
+          autoDemo
+          autoSpeed={0.5}
+          autoIntensity={2.2}
+          takeoverDuration={0.25}
+          autoResumeDelay={3000}
+          autoRampDuration={0.6}
+        />
+      </div>
 
       {/* LAYER 1 — Background ghost text (0.7x) */}
       <motion.div
@@ -50,24 +56,12 @@ export default function HeroSection() {
         </span>
       </motion.div>
 
-      {/* Blue glow */}
-      <div
-        className="absolute pointer-events-none"
-        style={{
-          top: "20%",
-          left: "5%",
-          width: "600px",
-          height: "500px",
-          background: "radial-gradient(ellipse at center, rgba(0,102,255,0.09) 0%, transparent 65%)",
-        }}
-      />
 
       {/* LAYER 2 — Foreground content (1x) */}
       <motion.div
         style={{ y: contentY, opacity: fadeOut }}
         className="relative z-20 w-full max-w-7xl mx-auto px-8 lg:px-14 pt-24 pb-16 flex flex-col items-center"
       >
-        {/* Center — editorial text block */}
         <div className="min-w-0 flex flex-col items-center text-center">
 
           {/* Acronym label */}
@@ -82,7 +76,7 @@ export default function HeroSection() {
             <span className="inline-block shrink-0 w-5 h-px bg-[#6B7280]/50" />
           </motion.p>
 
-          {/* Headline — clamp scale, Syne display font */}
+          {/* Headline */}
           <div className="mb-10">
             {["Stuck?", "Solved."].map((word, i) => (
               <div key={word} className="overflow-hidden pb-1">
@@ -98,9 +92,6 @@ export default function HeroSection() {
               </div>
             ))}
           </div>
-
-          {/* Terminal */}
-
 
           {/* Body */}
           <motion.p
@@ -121,17 +112,17 @@ export default function HeroSection() {
             className="flex flex-wrap items-center justify-center gap-4"
           >
             <Link
-              href="/auth?mode=signup"
+              href="/live"
               className="group rounded-full inline-flex items-center gap-2 bg-[#0066FF] hover:bg-[#0052CC] text-white px-7 py-3 font-semibold text-sm transition-all duration-200 shadow-[0_0_32px_rgba(0,102,255,0.28)] hover:shadow-[0_0_52px_rgba(0,102,255,0.5)]"
             >
-              Enter DART
+              Try DART Lens
               <span className="group-hover:translate-x-1 transition-transform duration-200">→</span>
             </Link>
             <Link
-              href="/auth"
+              href="/auth?mode=signup"
               className="text-sm text-[#6B7280] hover:text-[#F8F9FA] transition-colors duration-200 underline underline-offset-4 decoration-white/20"
             >
-              Sign in
+              Try DART Ask
             </Link>
           </motion.div>
         </div>

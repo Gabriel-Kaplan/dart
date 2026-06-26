@@ -22,7 +22,11 @@ const faqs = [
   },
   {
     q: "Can I use voice instead of typing?",
-    a: "Yes. Toggle to voice mid-session and describe your problem out loud. DART responds as if you're on a call with a real IT professional. Switch back to text at any time.",
+    a: "Yes — two ways. In DART Ask, toggle voice mid-session and describe your problem out loud. Or open DART Lens for a full-screen voice + screen takeover session where DART activates immediately, sees your screen, and resolves the problem directly. No typing required.",
+  },
+  {
+    q: "What is DART Lens?",
+    a: "DART Lens is live voice with screen takeover — DART sees your screen and resolves the problem directly, hands-on. The moment you open it, DART activates, asks what software you're in and what's wrong, then guides you or takes action on screen in real time. Think of it as a senior IT engineer sitting next to you. Coming in Phase 3.",
   },
   {
     q: "Is my data secure?",

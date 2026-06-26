@@ -41,7 +41,7 @@ const plans = [
     period: "/month",
     description: "For teams where everyone gets stuck sometimes.",
     cta: "Contact us",
-    href: "mailto:gabrielkappy@gmail.com",
+    href: "mailto:contact@devtodefy.com",
     highlight: false,
     features: [
       "Everything in Pro",
@@ -137,7 +137,7 @@ export default function PricingPage() {
             See the FAQ
           </Link>{" "}
           or{" "}
-          <a href="mailto:gabrielkappy@gmail.com" className="text-[#F8F9FA] underline underline-offset-4 hover:text-[#0066FF] transition-colors duration-200">
+          <a href="mailto:contact@devtodefy.com" className="text-[#F8F9FA] underline underline-offset-4 hover:text-[#0066FF] transition-colors duration-200">
             reach out directly.
           </a>
         </p>

@@ -8,6 +8,7 @@ import { motion, AnimatePresence } from "framer-motion";
 const NAV_LINKS = [
   { href: "/", label: "Home", exact: true },
   { href: "/pricing", label: "Pricing" },
+  { href: "/docs", label: "Docs" },
   { href: "/about", label: "About" },
 ];
 
@@ -15,6 +16,12 @@ export default function LandingNavbar() {
   const pathname = usePathname();
   const [hash, setHash] = useState("");
   const [menuOpen, setMenuOpen] = useState(false);
+  const [toast, setToast] = useState(false);
+
+  function showComingSoon() {
+    setToast(true);
+    setTimeout(() => setToast(false), 3000);
+  }
 
   useEffect(() => {
     setHash(window.location.hash);
@@ -39,6 +46,20 @@ export default function LandingNavbar() {
 
   return (
     <>
+      <AnimatePresence>
+        {toast && (
+          <motion.div
+            initial={{ opacity: 0, y: -8 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -8 }}
+            transition={{ duration: 0.2 }}
+            className="fixed top-5 left-1/2 -translate-x-1/2 z-[100] bg-[#111] border border-white/10 text-xs text-[#F8F9FA] px-5 py-2.5 rounded-full shadow-lg font-mono tracking-wide pointer-events-none"
+          >
+            DART Lens — Coming Soon
+          </motion.div>
+        )}
+      </AnimatePresence>
+
       <nav className="fixed top-0 inset-x-0 z-50 flex items-center justify-between px-8 lg:px-14 pt-5">
         {/* Logo */}
         <Link
@@ -52,7 +73,7 @@ export default function LandingNavbar() {
         <div className="hidden md:flex absolute left-1/2 -translate-x-1/2 items-center gap-1 bg-white/5 backdrop-blur-md border border-white/10 rounded-full px-2 py-1.5">
           {NAV_LINKS.map((link) => (
             <Link
-              key={link.href}
+              key={link.label}
               href={link.href}
               className={`
                 px-4 py-1.5 rounded-full text-sm font-medium transition-all duration-200
@@ -71,16 +92,16 @@ export default function LandingNavbar() {
         <div className="hidden md:flex items-center gap-3">
           <Link
             href="/auth"
-            className="text-sm text-[#6B7280] hover:text-[#F8F9FA] transition-colors duration-200"
+            className="text-sm border border-white/20 hover:border-white/40 text-[#F8F9FA] px-4 py-1.5 rounded-full font-medium transition-all duration-200"
           >
-            Sign In
+            DART Ask
           </Link>
-          <Link
-            href="/auth?mode=signup"
+          <button
+            onClick={showComingSoon}
             className="text-sm bg-[#0066FF] hover:bg-[#0052CC] text-white px-4 py-1.5 rounded-full font-medium transition-colors duration-200 shadow-[0_0_20px_rgba(0,102,255,0.3)]"
           >
-            Get Started
-          </Link>
+            DART Lens
+          </button>
         </div>
 
         {/* Hamburger — mobile only */}
@@ -119,7 +140,7 @@ export default function LandingNavbar() {
           >
             {NAV_LINKS.map((link, i) => (
               <motion.div
-                key={link.href}
+                key={link.label}
                 initial={{ opacity: 0, y: 10 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.06 + i * 0.07, duration: 0.3 }}
@@ -142,19 +163,18 @@ export default function LandingNavbar() {
               transition={{ delay: 0.27, duration: 0.3 }}
               className="mt-8 flex flex-col items-center gap-3"
             >
-              <Link
-                href="/auth?mode=signup"
-                onClick={() => setMenuOpen(false)}
+              <button
+                onClick={() => { showComingSoon(); setMenuOpen(false); }}
                 className="bg-[#0066FF] hover:bg-[#0052CC] text-white px-8 py-3 rounded-full font-semibold text-sm transition-colors duration-200 shadow-[0_0_28px_rgba(0,102,255,0.35)]"
               >
-                Get Started
-              </Link>
+                DART Lens
+              </button>
               <Link
                 href="/auth"
                 onClick={() => setMenuOpen(false)}
-                className="text-sm text-[#6B7280] hover:text-[#F8F9FA] transition-colors duration-200 underline underline-offset-4 decoration-white/20"
+                className="text-sm border border-white/20 text-[#F8F9FA] px-8 py-3 rounded-full font-medium transition-colors duration-200"
               >
-                Sign in
+                DART Ask
               </Link>
             </motion.div>
           </motion.div>

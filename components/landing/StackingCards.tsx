@@ -6,8 +6,8 @@ import Link from "next/link";
 const cards = [
   {
     number: "01",
-    title: "Pick your specialist",
-    body: "Select from six deep-knowledge agents — Salesforce, HubSpot, Jira, QuickBooks, SAP — or let the General agent handle anything else. The right expert loads instantly.",
+    title: "Open DART Ask",
+    body: "Sign in and pick your specialist — Salesforce, HubSpot, Jira, QuickBooks, SAP — or let the General agent handle anything else. The right expert loads instantly. No ticket. No queue.",
     icon: Search,
     color: "rgba(0,102,255,0.06)",
     accent: "#0066FF",
@@ -30,8 +30,8 @@ const cards = [
   },
   {
     number: "04",
-    title: "Move on",
-    body: "Fixed in minutes. Not days. DART doesn't drop you — it walks you through until the problem is gone. Then you close the tab and get back to work.",
+    title: "Escalate to DART Lens",
+    body: "Still stuck? Switch to DART Lens — full-screen voice mode where DART activates immediately and walks you through live. Hands-on help, no friction.",
     icon: ArrowRight,
     color: "rgba(0,102,255,0.02)",
     accent: "#0066FF",
@@ -90,14 +90,20 @@ export default function StackingCards() {
                       </p>
                     </div>
 
-                    {/* CTA on last card */}
+                    {/* CTAs on last card */}
                     {i === cards.length - 1 && (
-                      <div className="shrink-0 self-center">
+                      <div className="shrink-0 self-center flex flex-col gap-2">
                         <Link
-                          href="/auth?mode=signup"
+                          href="/live"
                           className="inline-flex items-center gap-2 bg-[#0066FF] hover:bg-[#0052CC] text-white px-6 py-2.5 text-sm font-semibold transition-colors duration-200 rounded-full"
                         >
-                          Try it now →
+                          Try DART Lens →
+                        </Link>
+                        <Link
+                          href="/auth?mode=signup"
+                          className="inline-flex items-center justify-center gap-2 text-[#6B7280] hover:text-[#F8F9FA] px-6 py-2.5 text-sm font-medium transition-colors duration-200"
+                        >
+                          Try DART Ask
                         </Link>
                       </div>
                     )}

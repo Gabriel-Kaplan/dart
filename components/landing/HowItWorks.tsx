@@ -1,18 +1,18 @@
 const steps = [
   {
     number: "01",
-    title: "Pick your software",
-    description: "Select from Salesforce, HubSpot, Jira, QuickBooks, SAP, or any other tool.",
+    title: "Launch DART Ask",
+    description: "Sign in and describe your problem in plain language — type or speak. No ticket, no queue, no hold music.",
   },
   {
     number: "02",
-    title: "Describe your problem",
-    description: "Type or speak. Tell DART exactly what's broken, stuck, or confusing.",
+    title: "AI diagnoses instantly",
+    description: "DART identifies your software — Salesforce, HubSpot, Jira, QuickBooks, SAP — and walks you through the fix step by step.",
   },
   {
     number: "03",
-    title: "Get instant expert help",
-    description: "DART diagnoses the issue and walks you through the fix, step by step.",
+    title: "Escalate to DART Lens",
+    description: "Need hands-on help? DART Lens takes over your screen and resolves it directly. Ask gets you 80% there — Lens gets you the rest.",
   },
 ];
 

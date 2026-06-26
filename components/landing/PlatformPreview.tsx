@@ -26,7 +26,7 @@ export default function PlatformPreview() {
           <div className="flex-1">
             <FadeUp>
               <p className="text-xs text-[#0066FF] font-mono tracking-widest uppercase mb-5">
-                Your specialist is ready
+                DART Ask
               </p>
             </FadeUp>
             <FadeUp delay={0.08}>

@@ -42,12 +42,20 @@ export default function EntryGate() {
         </FadeUp>
         <FadeUp delay={0.22}>
           <div className="flex flex-col items-center gap-4">
-            <Link
-              href="/auth?mode=signup"
-              className="inline-flex items-center gap-2 bg-[#0066FF] hover:bg-[#0052CC] text-white px-8 py-3.5 font-semibold text-sm transition-all duration-200 shadow-[0_0_40px_rgba(0,102,255,0.3)] hover:shadow-[0_0_60px_rgba(0,102,255,0.5)] rounded-full"
-            >
-              Enter DART →
-            </Link>
+            <div className="flex flex-wrap items-center justify-center gap-3">
+              <Link
+                href="/live"
+                className="inline-flex items-center gap-2 bg-[#0066FF] hover:bg-[#0052CC] text-white px-8 py-3.5 font-semibold text-sm transition-all duration-200 shadow-[0_0_40px_rgba(0,102,255,0.3)] hover:shadow-[0_0_60px_rgba(0,102,255,0.5)] rounded-full"
+              >
+                Try DART Lens →
+              </Link>
+              <Link
+                href="/auth?mode=signup"
+                className="inline-flex items-center gap-2 border border-white/20 hover:border-white/40 text-[#F8F9FA] px-8 py-3.5 font-semibold text-sm transition-all duration-200 rounded-full"
+              >
+                Try DART Ask
+              </Link>
+            </div>
             <p className="text-xs text-white/25">Free to start · No credit card</p>
           </div>
         </FadeUp>

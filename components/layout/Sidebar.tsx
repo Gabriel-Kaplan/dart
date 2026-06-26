@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { PanelLeft, Search, Trash2, Plus, LogOut } from "lucide-react";
 import { createSupabaseClient } from "@/lib/supabase/client";
 
@@ -18,6 +18,9 @@ const dm = {
   inputText:   "#F8F9FA",
   accent:      "#0066FF",
 };
+
+const SWIPE_MAX = 88;
+const SWIPE_THRESHOLD = 48;
 
 type Session = {
   id: string;
@@ -54,6 +57,11 @@ export default function Sidebar({ sessions: initialSessions, userEmail, onMobile
   const [search, setSearch] = useState("");
   const [confirming, setConfirming] = useState<string | null>(null);
 
+  // Swipe state (mobile only — touch events won't fire on desktop)
+  const [swipingId, setSwipingId] = useState<string | null>(null);
+  const [swipeX, setSwipeX] = useState(0);
+  const touchStartX = useRef(0);
+
   const filtered = sessions.filter(
     (s) =>
       s.software.toLowerCase().includes(search.toLowerCase()) ||
@@ -71,6 +79,37 @@ export default function Sidebar({ sessions: initialSessions, userEmail, onMobile
     setSessions((prev) => prev.filter((s) => s.id !== id));
     setConfirming(null);
     if (pathname === `/chat/${id}`) router.push("/dashboard");
+  }
+
+  function getTranslateX(id: string) {
+    if (swipingId === id) return swipeX;
+    if (confirming === id) return -SWIPE_MAX;
+    return 0;
+  }
+
+  function onTouchStart(e: React.TouchEvent, id: string) {
+    touchStartX.current = e.touches[0].clientX;
+    setSwipingId(id);
+    // Start from current position if already open
+    setSwipeX(confirming === id ? -SWIPE_MAX : 0);
+  }
+
+  function onTouchMove(e: React.TouchEvent, id: string) {
+    if (swipingId !== id) return;
+    const base = confirming === id ? -SWIPE_MAX : 0;
+    const dx = e.touches[0].clientX - touchStartX.current + base;
+    setSwipeX(Math.min(0, Math.max(dx, -SWIPE_MAX)));
+  }
+
+  function onTouchEnd(id: string) {
+    if (swipingId !== id) return;
+    if (swipeX < -SWIPE_THRESHOLD) {
+      setConfirming(id);
+    } else {
+      setConfirming(null);
+    }
+    setSwipingId(null);
+    setSwipeX(0);
   }
 
   return (
@@ -163,62 +202,103 @@ export default function Sidebar({ sessions: initialSessions, userEmail, onMobile
                 {search ? "No results." : "No sessions yet."}
               </p>
             )}
+
             {filtered.map((session) => {
               const isActive = pathname === `/chat/${session.id}`;
               const isConfirming = confirming === session.id;
+
               return (
                 <div
                   key={session.id}
-                  className="relative group flex items-start gap-2 px-3 py-2.5 mb-1 cursor-pointer transition-colors duration-150 hover:bg-white/[0.05]"
-                  style={{
-                    borderRadius: "0.75rem",
-                    background: isActive ? "rgba(255,255,255,0.10)" : undefined,
-                    border: isActive
-                      ? "1px solid rgba(255,255,255,0.10)"
-                      : "1px solid transparent",
-                  }}
+                  className="relative group mb-1 overflow-hidden"
+                  style={{ borderRadius: "0.75rem" }}
                 >
-                  <Link href={`/chat/${session.id}`} onClick={onMobileClose} className="flex-1 min-w-0">
-                    <p
-                      className="text-xs font-medium truncate"
-                      style={{ color: isActive ? dm.textPrimary : "rgba(248,249,250,0.6)" }}
-                    >
-                      {session.summary || session.software}
-                    </p>
-                    <p className="text-[10px] mt-0.5" style={{ color: dm.textMuted }}>
-                      {session.software} · {relativeTime(session.created_at)}
-                    </p>
-                  </Link>
+                  {/* ── Mobile swipe reveal area ── */}
+                  <div
+                    className="md:hidden absolute right-0 top-0 bottom-0 flex items-center justify-center gap-3"
+                    style={{ width: SWIPE_MAX, background: "rgba(239,68,68,0.10)" }}
+                  >
+                    {isConfirming ? (
+                      <>
+                        <button
+                          onClick={() => handleDelete(session.id)}
+                          className="text-[11px] font-semibold text-[#EF4444]"
+                        >
+                          Yes
+                        </button>
+                        <span style={{ color: "rgba(255,255,255,0.15)", fontSize: 10 }}>·</span>
+                        <button
+                          onClick={() => setConfirming(null)}
+                          className="text-[11px]"
+                          style={{ color: dm.textMuted }}
+                        >
+                          No
+                        </button>
+                      </>
+                    ) : (
+                      <Trash2 className="w-3.5 h-3.5 text-[#EF4444] opacity-60" />
+                    )}
+                  </div>
 
-                  {isConfirming ? (
-                    <div className="flex items-center gap-1.5 shrink-0 pt-0.5">
-                      <button
-                        onClick={() => handleDelete(session.id)}
-                        className="text-[10px] font-medium text-[#EF4444] hover:text-red-300 transition-colors"
+                  {/* ── Main row ── */}
+                  <div
+                    className="relative flex items-start gap-2 px-3 py-2.5 cursor-pointer transition-colors duration-150 hover:bg-white/[0.05]"
+                    style={{
+                      transform: `translateX(${getTranslateX(session.id)}px)`,
+                      transition: swipingId === session.id ? "none" : "transform 0.22s cubic-bezier(0.25,0.46,0.45,0.94)",
+                      background: isActive ? "rgba(255,255,255,0.10)" : undefined,
+                      border: isActive
+                        ? "1px solid rgba(255,255,255,0.10)"
+                        : "1px solid transparent",
+                      borderRadius: "0.75rem",
+                    }}
+                    onTouchStart={(e) => onTouchStart(e, session.id)}
+                    onTouchMove={(e) => onTouchMove(e, session.id)}
+                    onTouchEnd={() => onTouchEnd(session.id)}
+                  >
+                    <Link href={`/chat/${session.id}`} onClick={onMobileClose} className="flex-1 min-w-0">
+                      <p
+                        className="text-xs font-medium truncate"
+                        style={{ color: isActive ? dm.textPrimary : "rgba(248,249,250,0.6)" }}
                       >
-                        Yes
-                      </button>
+                        {session.summary || session.software}
+                      </p>
+                      <p className="text-[10px] mt-0.5" style={{ color: dm.textMuted }}>
+                        {session.software} · {relativeTime(session.created_at)}
+                      </p>
+                    </Link>
+
+                    {/* ── Desktop: trash icon + yes/no ── */}
+                    {isConfirming ? (
+                      <div className="hidden md:flex items-center gap-1.5 shrink-0 pt-0.5">
+                        <button
+                          onClick={() => handleDelete(session.id)}
+                          className="text-[10px] font-medium text-[#EF4444] hover:text-red-300 transition-colors"
+                        >
+                          Yes
+                        </button>
+                        <button
+                          onClick={() => setConfirming(null)}
+                          className="text-[10px] transition-colors"
+                          style={{ color: dm.textMuted }}
+                        >
+                          No
+                        </button>
+                      </div>
+                    ) : (
                       <button
-                        onClick={() => setConfirming(null)}
-                        className="text-[10px] transition-colors"
+                        onClick={(e) => {
+                          e.preventDefault();
+                          setConfirming(session.id);
+                        }}
+                        className="hidden md:block shrink-0 opacity-0 group-hover:opacity-100 transition-opacity duration-150 pt-0.5 hover:text-[#EF4444]"
                         style={{ color: dm.textMuted }}
+                        aria-label="Delete session"
                       >
-                        No
+                        <Trash2 className="w-3 h-3" />
                       </button>
-                    </div>
-                  ) : (
-                    <button
-                      onClick={(e) => {
-                        e.preventDefault();
-                        setConfirming(session.id);
-                      }}
-                      className="shrink-0 opacity-0 group-hover:opacity-100 transition-opacity duration-150 pt-0.5 hover:text-[#EF4444]"
-                      style={{ color: dm.textMuted }}
-                      aria-label="Delete session"
-                    >
-                      <Trash2 className="w-3 h-3" />
-                    </button>
-                  )}
+                    )}
+                  </div>
                 </div>
               );
             })}
